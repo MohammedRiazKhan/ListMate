@@ -21,8 +21,13 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import usePopup from "@/hooks/usePopup";
 
 export default function Lists() {
+  // Hooks
+  const { createdPopupVisible, deletePopupVisible, createdPopupMessage } =
+    usePopup();
+
   // Variables
   let colorScheme = useColorScheme();
   const headerHeight = useHeaderHeight();
@@ -35,65 +40,16 @@ export default function Lists() {
   const [lists, setLists] = useState([]);
   const [filteredLists, setFilteredLists] = useState([]);
   const [searchValue, setSearchValue] = useState("");
-  const [deletePopupVisible, setDeletePopupVisisble] = useState(false);
+
   const [hasShownPopup, setHasShownPopup] = useState(false);
   const [hasShownCreatedPopup, setHasShownCreatedPopup] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
-
-  const [createdPopupVisible, setCreatedPopupVisible] = useState();
-  const [createdPopupMessage, setCreatedPopupMessage] = useState();
 
   // useEffects
   useFocusEffect(
     useCallback(() => {
       fetchListsFromLocalStorage(); // Fetch the latest lists whenever the screen gains focus
     }, [lists])
-  );
-
-  // When list is deleted from either Create or View route, we display popup
-  useFocusEffect(
-    useCallback(() => {
-      if (isDeleted && deleteTime == getCurrentTime() && !hasShownPopup) {
-        setDeletePopupVisisble(true);
-        setTimeout(() => setDeletePopupVisisble(false), 5000);
-        setHasShownPopup(true);
-      }
-
-      if (
-        savedStatus === "Empty" &&
-        createTime === getCurrentTime() &&
-        !hasShownCreatedPopup &&
-        from === "created"
-      ) {
-        //console.log("Show not saved popup");
-        setCreatedPopupVisible(true);
-        setTimeout(() => setCreatedPopupVisible(false), 5000);
-        setHasShownCreatedPopup(true);
-        setCreatedPopupMessage("Empty list not saved");
-      } else if (
-        savedStatus === "Saved" &&
-        createTime === getCurrentTime() &&
-        !hasShownCreatedPopup &&
-        from === "created"
-      ) {
-        //console.log("Show saved popup");
-        setCreatedPopupVisible(true);
-        setTimeout(() => setCreatedPopupVisible(false), 5000);
-        setHasShownCreatedPopup(true);
-        setCreatedPopupMessage("List saved");
-      } else if (
-        savedStatus === "Updated" &&
-        createTime === getCurrentTime() &&
-        !hasShownCreatedPopup &&
-        from == "view"
-      ) {
-        //console.log("Show updated popup");
-        setCreatedPopupVisible(true);
-        setTimeout(() => setCreatedPopupVisible(false), 5000);
-        setHasShownCreatedPopup(true);
-        setCreatedPopupMessage("List updated");
-      }
-    }, [])
   );
 
   // Maintain value of search
