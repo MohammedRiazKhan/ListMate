@@ -6,7 +6,7 @@ Listly is a sleek and intuitive list app inspired by the simplicity of Google Ke
 
 ## Features
 
-- 📋 Create and manage lists or notes seamlessly
+- 📋 Create and manage lists seamlessly
 - 💾 Offline functionality with on-device storage
 - 🎨 Modern and responsive design
 - ✅ Simple, clean, and minimalistic interface
