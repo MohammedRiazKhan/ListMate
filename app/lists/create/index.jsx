@@ -84,24 +84,6 @@ export default function App() {
     );
   }
 
-  // const storeData = async (value) => {
-  //   try {
-  //     const jsonValue = JSON.stringify(value);
-
-  //     const storedLists = await AsyncStorage.getItem("lists");
-  //     const storedListsArray = [JSON.parse(storedLists)];
-
-  //     if (storedLists !== null) {
-  //       storedListsArray.push(JSON.parse(jsonValue));
-  //       console.log(storedListsArray);
-
-  //       await AsyncStorage.setItem("lists", JSON.stringify(storedListsArray));
-  //     }
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // };
-
   const storeData = async (value) => {
     let storedLists = await AsyncStorage.getItem("lists");
     if (storedLists) {
@@ -112,16 +94,6 @@ export default function App() {
     } else {
       await AsyncStorage.setItem("lists", JSON.stringify([value]));
     }
-
-    // if (storedLists) {
-    //   lists = storedLists;
-    //   lists.push(value);
-    //   console.log(lists);
-    // } else {
-    //   await AsyncStorage.setItem("lists", JSON.stringify(value));
-    // }
-
-    //await AsyncStorage.setItem("lists", JSON.stringify(lists));
   };
 
   function saveItems(itemBoxes, created, title) {
@@ -137,20 +109,6 @@ export default function App() {
       };
 
       storeData(listObject);
-
-      // fetch("http://192.168.18.26:6968/api/lists/new", {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-type": "application/json",
-      //   },
-      //   body: JSON.stringify(listObject),
-      // })
-      //   .then((response) => {
-      //     response.json();
-      //   })
-      //   .catch((error) => {
-      //     console.log(error);
-      //   });
 
       return "Saved";
     }
@@ -183,21 +141,6 @@ export default function App() {
 
   function deleteList() {
     setModalVisible(false);
-
-    // fetch(`http://192.168.18.26:6968/api/lists/delete/${id}`, {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-type": "application/json",
-    //   },
-    //   // body: JSON.stringify({"Delete"}),
-    // })
-    //   .then((response) => {
-    //     response.json();
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
-
     //console.log("Going to Delete the List");
     router.push({
       pathname: "/lists",
@@ -222,6 +165,7 @@ export default function App() {
       deleteItemBox={deleteItemBox}
       tickedItemBoxes={tickedItemBoxes}
       setTickedItemBoxes={setTickedItemBoxes}
+      scrollViewRef={scrollViewRef}
     />
   );
 }

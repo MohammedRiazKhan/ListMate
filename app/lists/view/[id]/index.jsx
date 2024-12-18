@@ -50,21 +50,6 @@ export default function EditList() {
     setEdited(getCurrentTime());
   }, []);
 
-  // Fetch List data from backend when page loads
-  useEffect(() => {
-    fetch(`http://192.168.18.26:6968/api/lists/${id}`)
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        console.log("Fetched List: ", data);
-        setTitle(data.title);
-        setItemBoxes(data["items"]);
-        setListToUpdate(data);
-        setTickedItemBoxes(data["tickedItems"]);
-      });
-  }, []);
-
   const fetchListFromLocalStorage = async () => {
     //await AsyncStorage.setItem("lists", "");
     try {
@@ -112,26 +97,12 @@ export default function EditList() {
     } else {
       //await AsyncStorage.setItem("lists", JSON.stringify([value]));
     }
-
-    // if (storedLists) {
-    //   lists = storedLists;
-    //   lists.push(value);
-    //   console.log(lists);
-    // } else {
-    //   await AsyncStorage.setItem("lists", JSON.stringify(value));
-    // }
-
-    //await AsyncStorage.setItem("lists", JSON.stringify(lists));
   };
 
   useEffect(() => {
     console.log("Page loaded, going to retrieve stored list with id ", id);
     fetchListFromLocalStorage();
   }, []);
-
-  // useEffect(() => {
-  //   console.log("ItemBoxes: ", tickedItemBoxes);
-  // });
 
   // Functions
   function saveOrCancelAndNavigateHome() {
@@ -189,19 +160,6 @@ export default function EditList() {
 
       updateData(listObject);
 
-      // fetch(`http://192.168.18.26:6968/api/lists/update/${id}`, {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-type": "application/json",
-      //   },
-      //   body: JSON.stringify(listObject),
-      // })
-      //   .then((response) => {
-      //     response.json();
-      //   })
-      //   .catch((error) => {
-      //     console.log(error);
-      //   });
       return "Updated";
     }
     return "Not updated";
@@ -247,34 +205,11 @@ export default function EditList() {
     } else {
       //await AsyncStorage.setItem("lists", JSON.stringify([value]));
     }
-
-    // if (storedLists) {
-    //   lists = storedLists;
-    //   lists.push(value);
-    //   console.log(lists);
-    // } else {
-    //   await AsyncStorage.setItem("lists", JSON.stringify(value));
-    // }
-
-    //await AsyncStorage.setItem("lists", JSON.stringify(lists));
   };
 
   function deleteList() {
     setModalVisible(false);
 
-    // fetch(`http://192.168.18.26:6968/api/lists/delete/${id}`, {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-type": "application/json",
-    //   },
-    //   // body: JSON.stringify({"Delete"}),
-    // })
-    //   .then((response) => {
-    //     response.json();
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
     deleteData();
 
     //console.log("Going to Delete the List");
@@ -304,54 +239,3 @@ export default function EditList() {
     />
   );
 }
-
-// Keeping incase there is seperate cases to handle in the ItemsForm
-// <KeyboardAvoidingView
-//   behavior={Platform.OS === "ios" ? "padding" : "height"} // "padding" for iOS, "height" for Android
-//   style={{
-//     backgroundColor:
-//       colorScheme === "dark"
-//         ? Colors.backgroundDark
-//         : Colors.backgroundLight,
-//     flex: 1,
-//   }}
-//   keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}
-//   className={`mb-0 ${colorScheme === "dark" ? "bg-black" : ""}`}
-// >
-//   <SafeAreaView className="container flex-1 ">
-//     <View className="flex-1">
-//       <ScrollView
-//         keyboardShouldPersistTaps={"always"}
-//         ref={editScrollViewRef}
-//         className="flex-1 p-4"
-//       >
-//         <ListTitleInput title={title} setTitle={setTitle} />
-//         {itemBoxes.map((item, index) => (
-//           <ItemBox
-//             key={item.id}
-//             item={item}
-//             itemBoxes={itemBoxes}
-//             setItemBoxes={setItemBoxes}
-//             addItemBox={addItemBox}
-//             deleteItemBox={deleteItemBox}
-//           />
-//         ))}
-
-//         <AddItemButton addItemBox={addItemBox} />
-//       </ScrollView>
-//     </View>
-
-//     <ListsToolBar
-//       isEditing={isEditing}
-//       edited={edited}
-//       handleOnPress={handleOnPress}
-//     />
-
-//     <OptionsModal
-//       modalVisible={modalVisible}
-//       setModalVisible={setModalVisible}
-//       deleteList={deleteList}
-//       id={id}
-//     />
-//   </SafeAreaView>
-// </KeyboardAvoidingView>

@@ -3,7 +3,7 @@ import ItemBox from "@/components/lists-components/ItemBox";
 import ListsToolBar from "@/components/lists-components/ListsToolBar";
 import ListTitleInput from "@/components/lists-components/ListTitleInput";
 import { useNavigation } from "expo-router";
-import { React, useEffect } from "react";
+import { React } from "react";
 import {
   KeyboardAvoidingView,
   Platform,
@@ -11,13 +11,10 @@ import {
   ScrollView,
   useColorScheme,
   View,
-  Text,
-  TouchableOpacity,
 } from "react-native";
 
 import OptionsModal from "@/components/lists-components/OptionsModal";
 import Colors from "@/constants/Colors";
-import { Entypo } from "@expo/vector-icons";
 import TickedItemsForm from "./TickedItemsForm";
 
 export default function ItemsForm({
@@ -71,6 +68,7 @@ export default function ItemsForm({
         <View className="flex-1">
           <ScrollView
             keyboardShouldPersistTaps={"always"}
+            contentInsetAdjustmentBehavior="automatic"
             ref={scrollViewRef}
             className={`flex-1 p-4 mb-12`}
           >

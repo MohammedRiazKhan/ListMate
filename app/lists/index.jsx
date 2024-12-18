@@ -2,6 +2,7 @@ import AddList from "@/components/lists-components/AddList";
 import ListItem from "@/components/lists-components/ListItem";
 import Popup from "@/components/lists-components/Popup";
 import Colors from "@/constants/Colors";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useHeaderHeight } from "@react-navigation/elements";
 import {
   Link,
@@ -14,16 +15,12 @@ import { StatusBar } from "expo-status-bar";
 import React, { useCallback, useEffect, useState } from "react";
 import {
   Platform,
-  Pressable,
+  RefreshControl,
   ScrollView,
-  Text,
   useColorScheme,
   View,
-  RefreshControl,
-  TouchableOpacity,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Lists() {
   // Variables
@@ -47,16 +44,6 @@ export default function Lists() {
   const [createdPopupMessage, setCreatedPopupMessage] = useState();
 
   // useEffects
-
-  // Initial page mount, fetch Lists
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     const lists = fetchListsFromLocalStorage();
-  //     console.log(lists);
-  //     //fetchLists(); // Fetch the latest lists whenever the screen gains focus
-  //   }, [fetchListsFromLocalStorage])
-  // );
-
   useFocusEffect(
     useCallback(() => {
       fetchListsFromLocalStorage(); // Fetch the latest lists whenever the screen gains focus
@@ -66,25 +53,11 @@ export default function Lists() {
   // When list is deleted from either Create or View route, we display popup
   useFocusEffect(
     useCallback(() => {
-      // console.log(deleteTime, getCurrentTime());
-      // console.log(deleteTime == getCurrentTime());
-      // console.log(listId);
-      // console.log(savedStatus);
       if (isDeleted && deleteTime == getCurrentTime() && !hasShownPopup) {
         setDeletePopupVisisble(true);
         setTimeout(() => setDeletePopupVisisble(false), 5000);
         setHasShownPopup(true);
       }
-
-      // console.log(savedStatus, typeof savedStatus);
-
-      // console.log(
-      //   savedStatus,
-      //   createTime,
-      //   getCurrentTime(),
-      //   !hasShownCreatedPopup,
-      //   from
-      // );
 
       if (
         savedStatus === "Empty" &&
@@ -153,30 +126,19 @@ export default function Lists() {
     });
   }, [navigation]);
 
-  // Every minute fetch lists from backend
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     fetchLists();
-  //   }, 60000);
+  //Every minute fetch lists from localstorage
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetchListsFromLocalStorage();
+    }, 60000);
 
-  //   return () => clearInterval(interval);
-  // }, []);
+    return () => clearInterval(interval);
+  }, []);
 
   // Functions
   const handleAddListPress = () => {
     router.push("/lists/create");
   };
-
-  // Fetch lists from API
-  const fetchLists = useCallback(() => {
-    fetch("http://192.168.18.26:6968/api/lists")
-      .then((response) => response.json())
-      .then((data) => {
-        setLists(data);
-        setFilteredLists(data); // Initialize filtered lists with all data
-      })
-      .catch((error) => console.error("Error fetching lists:", error));
-  }, []);
 
   const fetchListsFromLocalStorage = async () => {
     //await AsyncStorage.setItem("lists", "");

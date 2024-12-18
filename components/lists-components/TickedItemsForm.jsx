@@ -60,7 +60,10 @@ export default function TickedItemsForm({
       </View>
 
       {isExpanded && (
-        <ScrollView keyboardShouldPersistTaps={"always"}>
+        <ScrollView
+          keyboardShouldPersistTaps={"always"}
+          contentInsetAdjustmentBehavior="automatic"
+        >
           {tickedItemBoxes.map((item, index) => (
             <TickedItemBox
               key={item.id}
