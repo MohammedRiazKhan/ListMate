@@ -23,6 +23,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Lists() {
   // Variables
@@ -48,10 +49,18 @@ export default function Lists() {
   // useEffects
 
   // Initial page mount, fetch Lists
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     const lists = fetchListsFromLocalStorage();
+  //     console.log(lists);
+  //     //fetchLists(); // Fetch the latest lists whenever the screen gains focus
+  //   }, [fetchListsFromLocalStorage])
+  // );
+
   useFocusEffect(
     useCallback(() => {
-      fetchLists(); // Fetch the latest lists whenever the screen gains focus
-    }, [fetchLists])
+      fetchListsFromLocalStorage(); // Fetch the latest lists whenever the screen gains focus
+    }, [lists])
   );
 
   // When list is deleted from either Create or View route, we display popup
@@ -145,13 +154,13 @@ export default function Lists() {
   }, [navigation]);
 
   // Every minute fetch lists from backend
-  useEffect(() => {
-    const interval = setInterval(() => {
-      fetchLists();
-    }, 60000);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     fetchLists();
+  //   }, 60000);
 
-    return () => clearInterval(interval);
-  }, []);
+  //   return () => clearInterval(interval);
+  // }, []);
 
   // Functions
   const handleAddListPress = () => {
@@ -168,6 +177,25 @@ export default function Lists() {
       })
       .catch((error) => console.error("Error fetching lists:", error));
   }, []);
+
+  const fetchListsFromLocalStorage = async () => {
+    //await AsyncStorage.setItem("lists", "");
+    try {
+      const jsonValue = await AsyncStorage.getItem("lists");
+      const storedLists = jsonValue != null ? JSON.parse(jsonValue) : null;
+
+      // console.log(storedLists);
+      if (storedLists) {
+        setLists(storedLists);
+        setFilteredLists(storedLists);
+      } else {
+        setLists([]);
+        setFilteredLists([]);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   // Search lists
   function searchLists(searchValue) {
@@ -194,7 +222,7 @@ export default function Lists() {
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     setTimeout(() => {
-      fetchLists();
+      fetchListsFromLocalStorage();
       setRefreshing(false);
     }, 2000);
   }, []);

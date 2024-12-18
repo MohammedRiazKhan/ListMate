@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "GoogleKeepClone",
-    "slug": "GoogleKeepClone",
-    "scheme": "GoogleKeepClone",
+    "name": "Listly",
+    "slug": "Listly",
+    "scheme": "Listly",
     "version": "1.0.0",
     "orientation": "portrait",
     "newArchEnabled": true,

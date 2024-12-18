@@ -6,6 +6,7 @@ import uuid from "react-native-uuid";
 import ItemsForm from "@/components/lists-components/ItemsForm";
 import TickedItemsForm from "@/components/lists-components/TickedItemsForm";
 import { SafeAreaView } from "react-native-safe-area-context";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function EditList() {
   // Variables
@@ -64,9 +65,73 @@ export default function EditList() {
       });
   }, []);
 
+  const fetchListFromLocalStorage = async () => {
+    //await AsyncStorage.setItem("lists", "");
+    try {
+      const jsonValue = await AsyncStorage.getItem("lists");
+      const storedLists = jsonValue != null ? JSON.parse(jsonValue) : null;
+
+      // console.log(storedLists);
+      if (storedLists) {
+        storedLists.map((list) => {
+          if (list["id"] == id) {
+            setTitle(list.title);
+            setItemBoxes(list["items"]);
+            setListToUpdate(list);
+            setTickedItemBoxes(list["tickedItems"]);
+          }
+        });
+      } else {
+        console.log("Something went wrong");
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const updateData = async (value) => {
+    let storedLists = await AsyncStorage.getItem("lists");
+    if (storedLists) {
+      let lists = [];
+      lists = JSON.parse(storedLists);
+      console.log(typeof lists);
+
+      lists.map((list, index) => {
+        if (list["id"] == id) {
+          console.log(list);
+          list["createdAt"] = list["createdAt"];
+          list["editedAt"] = edited;
+          list["items"] = itemBoxes;
+          list["title"] = title;
+          list["tickedItems"] = tickedItemBoxes;
+          list["length"] = itemBoxes.length;
+        }
+      });
+
+      await AsyncStorage.setItem("lists", JSON.stringify(lists));
+    } else {
+      //await AsyncStorage.setItem("lists", JSON.stringify([value]));
+    }
+
+    // if (storedLists) {
+    //   lists = storedLists;
+    //   lists.push(value);
+    //   console.log(lists);
+    // } else {
+    //   await AsyncStorage.setItem("lists", JSON.stringify(value));
+    // }
+
+    //await AsyncStorage.setItem("lists", JSON.stringify(lists));
+  };
+
   useEffect(() => {
-    console.log("ItemBoxes: ", tickedItemBoxes);
-  });
+    console.log("Page loaded, going to retrieve stored list with id ", id);
+    fetchListFromLocalStorage();
+  }, []);
+
+  // useEffect(() => {
+  //   console.log("ItemBoxes: ", tickedItemBoxes);
+  // });
 
   // Functions
   function saveOrCancelAndNavigateHome() {
@@ -122,19 +187,21 @@ export default function EditList() {
 
       //console.log(listObject);
 
-      fetch(`http://192.168.18.26:6968/api/lists/update/${id}`, {
-        method: "POST",
-        headers: {
-          "Content-type": "application/json",
-        },
-        body: JSON.stringify(listObject),
-      })
-        .then((response) => {
-          response.json();
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      updateData(listObject);
+
+      // fetch(`http://192.168.18.26:6968/api/lists/update/${id}`, {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-type": "application/json",
+      //   },
+      //   body: JSON.stringify(listObject),
+      // })
+      //   .then((response) => {
+      //     response.json();
+      //   })
+      //   .catch((error) => {
+      //     console.log(error);
+      //   });
       return "Updated";
     }
     return "Not updated";
@@ -166,22 +233,49 @@ export default function EditList() {
     setModalVisible(true);
   }
 
+  const deleteData = async () => {
+    let storedLists = await AsyncStorage.getItem("lists");
+    if (storedLists) {
+      let lists = [];
+      lists = JSON.parse(storedLists);
+
+      const exludingDeletedItem = lists.filter(
+        (listToDelete) => listToDelete["id"] !== id
+      );
+
+      await AsyncStorage.setItem("lists", JSON.stringify(exludingDeletedItem));
+    } else {
+      //await AsyncStorage.setItem("lists", JSON.stringify([value]));
+    }
+
+    // if (storedLists) {
+    //   lists = storedLists;
+    //   lists.push(value);
+    //   console.log(lists);
+    // } else {
+    //   await AsyncStorage.setItem("lists", JSON.stringify(value));
+    // }
+
+    //await AsyncStorage.setItem("lists", JSON.stringify(lists));
+  };
+
   function deleteList() {
     setModalVisible(false);
 
-    fetch(`http://192.168.18.26:6968/api/lists/delete/${id}`, {
-      method: "POST",
-      headers: {
-        "Content-type": "application/json",
-      },
-      // body: JSON.stringify({"Delete"}),
-    })
-      .then((response) => {
-        response.json();
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    // fetch(`http://192.168.18.26:6968/api/lists/delete/${id}`, {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-type": "application/json",
+    //   },
+    //   // body: JSON.stringify({"Delete"}),
+    // })
+    //   .then((response) => {
+    //     response.json();
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
+    deleteData();
 
     //console.log("Going to Delete the List");
     router.push({

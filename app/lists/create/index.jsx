@@ -5,6 +5,7 @@ import { useColorScheme } from "react-native";
 import uuid from "react-native-uuid";
 
 import ItemsForm from "@/components/lists-components/ItemsForm";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function App() {
   //Variables
@@ -52,10 +53,8 @@ export default function App() {
   // Functions
   function saveOrCancelAndNavigateHome() {
     //console.log("Saving and Navigating to ListPage");
-
     const savedStatus = saveItems(itemBoxes, created, title);
     //console.log(savedStatus);
-
     router.push({
       pathname: "/lists",
       params: {
@@ -85,6 +84,46 @@ export default function App() {
     );
   }
 
+  // const storeData = async (value) => {
+  //   try {
+  //     const jsonValue = JSON.stringify(value);
+
+  //     const storedLists = await AsyncStorage.getItem("lists");
+  //     const storedListsArray = [JSON.parse(storedLists)];
+
+  //     if (storedLists !== null) {
+  //       storedListsArray.push(JSON.parse(jsonValue));
+  //       console.log(storedListsArray);
+
+  //       await AsyncStorage.setItem("lists", JSON.stringify(storedListsArray));
+  //     }
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // };
+
+  const storeData = async (value) => {
+    let storedLists = await AsyncStorage.getItem("lists");
+    if (storedLists) {
+      let lists = [];
+      lists = JSON.parse(storedLists);
+      lists.push(value);
+      await AsyncStorage.setItem("lists", JSON.stringify(lists));
+    } else {
+      await AsyncStorage.setItem("lists", JSON.stringify([value]));
+    }
+
+    // if (storedLists) {
+    //   lists = storedLists;
+    //   lists.push(value);
+    //   console.log(lists);
+    // } else {
+    //   await AsyncStorage.setItem("lists", JSON.stringify(value));
+    // }
+
+    //await AsyncStorage.setItem("lists", JSON.stringify(lists));
+  };
+
   function saveItems(itemBoxes, created, title) {
     if (title && itemBoxes.length > 0) {
       let listObject = {
@@ -97,19 +136,21 @@ export default function App() {
         tickedItems: tickedItemBoxes,
       };
 
-      fetch("http://192.168.18.26:6968/api/lists/new", {
-        method: "POST",
-        headers: {
-          "Content-type": "application/json",
-        },
-        body: JSON.stringify(listObject),
-      })
-        .then((response) => {
-          response.json();
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      storeData(listObject);
+
+      // fetch("http://192.168.18.26:6968/api/lists/new", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-type": "application/json",
+      //   },
+      //   body: JSON.stringify(listObject),
+      // })
+      //   .then((response) => {
+      //     response.json();
+      //   })
+      //   .catch((error) => {
+      //     console.log(error);
+      //   });
 
       return "Saved";
     }

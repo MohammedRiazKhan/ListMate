@@ -49,17 +49,17 @@ Follow these steps to run Listly on your local machine:
 
 ## Screenshots
 
-### Home Screen
+### Lists Screen
 
-![Lists](assets/icon.png)
+![Lists](assets/screenshots/lists.png)
 
 ### New List Screen
 
-![Create List](assets/icon.png)
+![Create List](assets/screenshots/create-list.png)
 
 ### View/Edit List Screen
 
-![Edit List](assets/icon.png)
+![Edit List](assets/screenshots/view-list.png)
 
 ## Purpose
 
