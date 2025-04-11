@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "Listly",
-    "slug": "Listly",
-    "scheme": "Listly",
+    "name": "ListMate",
+    "slug": "ListMate",
+    "scheme": "ListMate",
     "version": "1.0.0",
     "orientation": "portrait",
     "newArchEnabled": true,
