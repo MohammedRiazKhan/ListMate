@@ -1,6 +1,6 @@
-# Listly
+# ListMate
 
-Listly is a sleek and intuitive list app inspired by the simplicity of Google Keep. Users can create, manage, and organize tasks effortlessly, with all data stored securely on their device. Designed with a clean, minimalistic interface for a smooth user experience.
+ListMate is a sleek and intuitive list app inspired by the simplicity of Google Keep. Users can create, manage, and organize tasks effortlessly, with all data stored securely on their device. Designed with a clean, minimalistic interface for a smooth user experience.
 
 ---
 
@@ -27,13 +27,13 @@ Follow these steps to run Listly on your local machine:
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/MohammedRiazKhan/Listly.git
+   git clone https://github.com/MohammedRiazKhan/ListMate.git
    ```
 
 2. Navigate to the project directory:
 
    ```bash
-   cd Listly
+   cd ListMate
    ```
 
 3. Install dependencies:
